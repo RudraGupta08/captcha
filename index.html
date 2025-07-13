@@ -30,7 +30,7 @@
 <body>
   <h1>🛡️ MythArena CAPTCHA</h1>
   <p>Please complete the CAPTCHA to verify yourself.</p>
-  
+
   <form id="form">
     <div class="h-captcha" data-sitekey="606e47da-fd78-4670-8f86-a700c92aa85a"></div>
     <br />
@@ -43,14 +43,24 @@
     document.getElementById('form').addEventListener('submit', async function (e) {
       e.preventDefault();
       const token = hcaptcha.getResponse();
-
       if (!token) {
         alert("Please complete the CAPTCHA");
         return;
       }
 
-      tg.sendData(token); // Sends token back to bot
-      tg.close(); // Optional: auto-close web app
+      const userId = new URLSearchParams(window.location.search).get('id');
+
+      const ipRes = await fetch('https://api.ipify.org?format=json');
+      const ip = (await ipRes.json()).ip;
+
+      await fetch('https://185.238.3.36:3030/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, userId, ip })
+      });
+
+      tg.sendData(token); // optional
+      tg.close();
     });
   </script>
 </body>
