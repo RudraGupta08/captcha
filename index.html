@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MythArena CAPTCHA</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      background-color: #0f0f0f;
+      color: #fff;
+    }
+    .h-captcha {
+      display: inline-block;
+      margin: 20px auto;
+    }
+    button {
+      padding: 10px 20px;
+      background: #444;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>🛡️ MythArena CAPTCHA</h1>
+  <p>Please complete the CAPTCHA to verify yourself.</p>
+  
+  <form id="form">
+    <div class="h-captcha" data-sitekey="606e47da-fd78-4670-8f86-a700c92aa85a"></div>
+    <br />
+    <button type="submit">✅ Submit</button>
+  </form>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+
+    document.getElementById('form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const token = hcaptcha.getResponse();
+
+      if (!token) {
+        alert("Please complete the CAPTCHA");
+        return;
+      }
+
+      tg.sendData(token); // Sends token back to bot
+      tg.close(); // Optional: auto-close web app
+    });
+  </script>
+</body>
+</html>
